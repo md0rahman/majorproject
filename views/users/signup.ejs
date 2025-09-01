@@ -1,0 +1,76 @@
+<!-- users/signup.ejs -->
+
+<div class="row mt-5">
+  <div class="col-lg-7 col-md-10 col-sm-10 mx-auto">
+    <div class="card shadow-lg border-0 rounded-4 overflow-hidden" style="background: linear-gradient(145deg, #ffffff, #f8f9fa); transition: transform 0.2s ease, box-shadow 0.2s ease;">
+      <div class="card-header text-black text-center py-3">
+        <h3 class="mb-0 fw-bold">📝 SignUp on Wanderlust</h3>
+      </div>
+
+      <div class="card-body p-4">
+        <form action="/signup" method="POST" class="needs-validation" novalidate>
+          
+          <!-- Username -->
+          <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input 
+              name="username" 
+              id="username"
+              type="text" 
+              class="form-control" 
+              placeholder="Enter your username"
+              required 
+              autocomplete="username"
+            />
+            <div class="invalid-feedback">Please enter a username.</div>
+          </div>
+
+          <!-- Email -->
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input 
+              name="email" 
+              id="email"
+              type="email" 
+              class="form-control" 
+              placeholder="Enter your email"
+              required 
+              autocomplete="email"
+            />
+            <div class="invalid-feedback">Please enter a valid email address.</div>
+          </div>
+
+          <!-- Password -->
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input 
+              name="password" 
+              id="password"
+              type="password" 
+              class="form-control" 
+              placeholder="Enter a strong password"
+              minlength="6"
+              required 
+              autocomplete="new-password"
+            />
+            <div class="invalid-feedback">Password must be at least 6 characters long.</div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="d-grid">
+            <button class="btn btn-dark btn-lg mt-4" type="submit">
+              <i class="fas fa-user-plus me-2"></i> Create Account
+            </button>
+          </div>
+
+          <!-- Link to Login -->
+          <p class="text-center mt-3 mb-0">
+            Already have an account? 
+            <a href="/login" class="text-decoration-none">Login here</a>
+          </p>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

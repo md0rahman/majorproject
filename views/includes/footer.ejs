@@ -1,0 +1,133 @@
+<!-- includes/footer.ejs -->
+<style>
+  .air-footer{
+    background:#f7f7f7;
+    font-size:14px;
+    color:#444;
+    margin-top:40px;
+  }
+  .air-footer .container{
+    max-width:1280px;
+    margin:0 auto;
+    padding:40px 20px 20px;
+  }
+
+  /* Top link columns */
+  .footer-cols{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:30px;
+    margin-bottom:30px;
+  }
+  .footer-col h5{
+    font-size:14px;
+    font-weight:700;
+    margin-bottom:10px;
+  }
+  .footer-col a{
+    display:block;
+    margin:6px 0;
+    color:#444;
+    text-decoration:none;
+  }
+  .footer-col a:hover{ text-decoration:underline; }
+
+  /* Bottom row */
+  .footer-bottom{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:space-between;
+    align-items:center;
+    padding:16px 0;
+    border-top:1px solid #ddd;
+    font-size:13px;
+  }
+  .footer-bottom-left{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+  .footer-bottom-left a{ color:#444; text-decoration:none; }
+  .footer-bottom-left a:hover{ text-decoration:underline; }
+
+  .footer-bottom-right{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    flex-wrap:wrap;
+  }
+  .lang-curr{ display:flex; gap:14px; align-items:center; }
+  .lang-curr i{ margin-right:4px; }
+
+  .footer-socials{ display:flex; gap:14px; }
+  .footer-socials a{ color:#444; font-size:16px; }
+  .footer-socials a:hover{ color:#000; }
+
+  @media(max-width:768px){
+    .footer-cols{ grid-template-columns:1fr 1fr; gap:20px; }
+    .footer-bottom{ flex-direction:column; gap:10px; align-items:flex-start; }
+  }
+</style>
+
+<footer class="air-footer">
+  <div class="container">
+    <!-- Top columns -->
+    <div class="footer-cols">
+      <div class="footer-col">
+        <h5>Support</h5>
+        <a href="/help">Help center</a>
+        <a href="#">Safety & incident reporting</a>
+        <a href="#">Stay protection programme</a>
+        <a href="#">Inclusive travel</a>
+        <a href="#">Accessibility options</a>
+        <a href="#">Cancellation & refunds</a>
+        <a href="#">Neighbourhood concerns</a>
+      </div>
+
+      <div class="footer-col">
+        <h5>For Hosts</h5>
+        <a href="#">List your place</a>
+        <a href="#">Host an experience</a>
+        <a href="#">Tools & resources</a>
+        <a href="#">Host guarantee</a>
+        <a href="#">Community & forums</a>
+        <a href="#">Responsible hosting</a>
+        <a href="#">Workshops & webinars</a>
+        <a href="#">Co-hosting options</a>
+      </div>
+
+      <div class="footer-col">
+        <h5>Company</h5>
+        <a href="#">What’s new</a>
+        <a href="#">Press & media</a>
+        <a href="#">Careers</a>
+        <a href="#">Investors</a>
+        <a href="#">Wanderlust.org stays</a>
+      </div>
+    </div>
+
+    <!-- Bottom row -->
+    <div class="footer-bottom">
+      <div class="footer-bottom-left">
+        <span>© <%= new Date().getFullYear() %> Wanderlust Private Limited</span>
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
+        <a href="#">Sitemap</a>
+        <a href="#">Company details</a>
+      </div>
+
+      <div class="footer-bottom-right">
+        <div class="lang-curr">
+          <span><i class="fa-solid fa-globe"></i> English (IN)</span>
+          <span><i class="fa-solid fa-indian-rupee-sign"></i> INR</span>
+        </div>
+        <div class="footer-socials">
+          <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

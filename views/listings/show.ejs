@@ -1,0 +1,522 @@
+<!-- views/listings/show.ejs -->
+
+<script>
+  const mapToken = "<%= process.env.MAP_TOKEN %>";
+  const listing = <%- JSON.stringify(listing) %>;
+</script>
+
+<style>
+:root{
+  --primary:#ff385c; --text:#222; --muted:#6b7280; --card:#fff;
+  --radius:16px; --shadow:0 10px 28px rgba(0,0,0,.10);
+  --shadow-sm:0 6px 18px rgba(0,0,0,.08);
+}
+.show-wrap{margin-top:1.2rem}
+.show-title{font-weight:800;letter-spacing:.2px;margin-bottom:1rem;display:flex;gap:.6rem;flex-wrap:wrap}
+.show-sub{color:var(--muted);font-size:.95rem;margin-bottom:1.2rem}
+
+/* Gallery */
+.gallery{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:210px 210px;
+  gap:10px;grid-template-areas:"a b c" "a d e";border-radius:18px;overflow:hidden;
+  position:relative;box-shadow:var(--shadow);background:#f6f7f8}
+.gallery .tile{position:relative;overflow:hidden;border-radius:12px}
+.gallery .tile img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s ease}
+.gallery .tile:hover img{transform:scale(1.03)}
+.tile-a{grid-area:a;border-radius:18px}.tile-b{grid-area:b}.tile-c{grid-area:c}.tile-d{grid-area:d}.tile-e{grid-area:e}
+
+.gallery-actions{position:absolute;right:14px;top:14px;display:flex;gap:.5rem;z-index:3}
+.action-btn{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;
+  background:rgba(255,255,255,.85);backdrop-filter:blur(6px);box-shadow:var(--shadow-sm);
+  cursor:pointer;transition:transform .2s ease,background .2s ease,color .2s ease}
+.action-btn:hover{transform:translateY(-1px);background:var(--primary);color:#fff}
+.action-btn.hot{ background:rgba(255,255,255,.85); color:var(--primary); }
+
+.show-all{position:absolute;right:16px;bottom:16px;z-index:2;background:#fff;border-radius:999px;
+  padding:.55rem .9rem;font-weight:600;box-shadow:var(--shadow-sm);border:1px solid rgba(0,0,0,.08);
+  display:flex;align-items:center;gap:.5rem;cursor:pointer}
+.show-all i{font-size:.95rem;color:#111}
+
+.card-prem{border:0;border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
+.card-prem .card-body{padding:1.25rem}
+.badge-row{display:flex;gap:1rem;flex-wrap:wrap;margin:.25rem 0 1rem 0}
+.badge-chip{display:flex;align-items:center;gap:.5rem;background:#fff;border:1px solid #eee;border-radius:999px;
+  padding:.45rem .8rem;font-weight:600;color:#111;box-shadow:var(--shadow-sm)}
+.badge-chip i{color:#d4a300}
+.info-list .list-group-item{border:0;padding:.6rem 0;color:var(--muted);font-size:.98rem}
+
+#map{width:100%;height:420px;border-radius:16px;box-shadow:var(--shadow)}
+.review-card {
+  border: 1px solid rgba(0,0,0,.1) !important;
+  border-radius: 16px;
+}
+
+
+/* star input */
+.classic-rating{direction:rtl;display:inline-flex}
+.classic-rating input{display:none}
+.classic-rating label{font-size:2rem;color:#ccc;cursor:pointer;transition:color .2s}
+.classic-rating label:hover,.classic-rating label:hover~label{color:#ffca08}
+.classic-rating input:checked~label{color:#ffca08}
+
+/* ======= 75/25 two-column layout (desktop) ======= */
+.two-col{
+  display:grid; gap:24px;
+}
+@media (min-width: 992px){
+  .two-col{ grid-template-columns: 3fr 1fr; align-items:start; }
+}
+
+/* Reserve Card */
+.reserve-card{
+  background:#fff;border-radius:16px;box-shadow:var(--shadow);
+  padding:16px;border:1px solid rgba(0,0,0,.06);
+}
+.reserve-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
+.reserve-price{font-weight:800;font-size:1.2rem}
+.reserve-price small{font-weight:600;color:var(--muted);font-size:.95rem}
+.reserve-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.reserve-grid label{font-size:.8rem;font-weight:700;color:#111;display:block;margin-bottom:4px}
+.reserve-grid input,.reserve-grid select{
+  width:100%;border:1px solid #e5e7eb;border-radius:10px;padding:.55rem .65rem;font-size:.95rem;
+}
+.reserve-btn{width:100%;border:0;background:linear-gradient(90deg,#ff385c,#ff1e80);
+  color:#fff;font-weight:700;border-radius:25px;padding:.8rem 1rem}
+.reserve-note{font-size:.8rem;color:#6b7280;text-align:center;margin-top:.5rem}
+.reserve-fees{margin-top:.75rem}
+.reserve-fees .line{display:flex;justify-content:space-between;font-size:.95rem;margin:.35rem 0}
+.reserve-fees .total{font-weight:800;border-top:1px solid #eee;padding-top:.5rem}
+
+/* Sticky on desktop for right column */
+@media (min-width: 992px){ .reserve-sticky{ position: sticky; top: 100px; } }
+
+/* Mobile stacking */
+@media (max-width:991.98px){ .reserve-sticky{ position: static; } }
+
+@media (max-width:767.98px){
+  .show-wrap{margin-top:.2rem}
+  .gallery{grid-template-columns:1fr;grid-template-rows:240px;grid-template-areas:"a";gap:8px}
+  .tile-a{border-radius:16px}.tile-b,.tile-c,.tile-d,.tile-e{display:none}
+  .show-all{right:12px;bottom:12px;padding:.5rem .8rem}
+  .badge-row{gap:.6rem}
+
+  /* ✅ On mobile: show Reserve card before the left content (above reviews) */
+  .two-col{ display:flex; flex-direction:column; }
+  .reserve-card{ order:1; margin-bottom:16px; }
+  .left-col{ order:2; }
+}
+
+/* ===== Airbnb-like Calendar styles ===== */
+.cal-wrap{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:16px;padding:18px;box-shadow:var(--shadow-sm);margin-top:22px}
+.cal-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.cal-title{font-weight:800;font-size:1.15rem}
+.cal-sub{color:var(--muted);font-size:.85rem}
+.cal-actions{display:flex;gap:14px;align-items:center}
+.cal-clear{color:#374151;font-weight:700;font-size:.9rem;cursor:pointer}
+.cal-months{display:grid;gap:20px}
+@media (min-width:768px){ .cal-months{grid-template-columns:1fr 1fr} }
+.cal-month{border:1px solid #eee;border-radius:12px;padding:10px}
+.cal-caption{font-weight:700}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-dow{color:#6b7280;font-size:.75rem;text-align:center;padding:6px 0}
+.cal-cell{height:38px;border-radius:10px;text-align:center;line-height:38px;cursor:pointer;user-select:none}
+.cal-cell.muted{color:#c4c4c4;cursor:default}
+.cal-cell.disabled{color:#d1d5db;cursor:not-allowed}
+.cal-cell.selected{background:#111;color:#fff}
+.cal-cell.inrange{background:#feecef}
+.cal-cell.start,.cal-cell.end{background:#ff2c72;color:#fff}
+.cal-btn{width:32px;height:32px;border-radius:50%;border:1px solid #e5e7eb;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.cal-btn:disabled{opacity:.4;cursor:not-allowed}
+</style>
+
+<div class="container show-wrap">
+  <div class="show-title h4"><i class="fa-regular fa-map"></i><span><%= listing.title %></span></div>
+  <div class="show-sub">Entire place • <%= listing.location %>, <%= listing.country %></div>
+
+  <%
+    const base = (listing.image && (listing.image.url || listing.image)) || '/images/default.jpg';
+    const extra = (listing.images && listing.images.length ? listing.images.map(i => i.url || i) : []);
+    const pics = [base, extra[0]||base, extra[1]||base, extra[2]||base, extra[3]||base].slice(0,5);
+  %>
+
+  <div class="gallery mb-4">
+    <div class="gallery-actions">
+      <div id="shareBtn" class="action-btn" title="Share"><i class="fa-solid fa-arrow-up-from-bracket"></i></div>
+      <% const wished = currUser && currUser.wishlist && currUser.wishlist.some(oid => String(oid) === String(listing._id)); %>
+      <div class="action-btn <%= wished ? 'hot' : '' %>" title="Save">
+        <i class="<%= wished ? 'fa-solid' : 'fa-regular' %> fa-heart heartIcon" data-id="<%= listing._id %>"></i>
+      </div>
+    </div>
+
+    <div class="tile tile-a"><img src="<%= pics[0] %>" alt=""></div>
+    <div class="tile tile-b"><img src="<%= pics[1] %>" alt=""></div>
+    <div class="tile tile-c"><img src="<%= pics[2] %>" alt=""></div>
+    <div class="tile tile-d"><img src="<%= pics[3] %>" alt=""></div>
+    <div class="tile tile-e"><img src="<%= pics[4] %>" alt=""></div>
+
+    <button type="button" class="show-all"><i class="fa-regular fa-images"></i> Show all photos</button>
+  </div>
+
+  <!-- =================== 75/25 WRAPPER START =================== -->
+  <div class="two-col">
+    <!-- LEFT 75% -->
+    <div class="left-col">
+      <div class="mb-4">
+        <div class="card-body">
+          <%
+            let avgR = 0, rc = (listing.reviews?.length || 0);
+            if (rc > 0) { avgR = listing.reviews.reduce((sum, r) => sum + (Number(r.rating)||0), 0) / rc; avgR = Number(avgR.toFixed(1)); }
+          %>
+          <div class="badge-row">
+            <div class="badge-chip"><i class="fa-solid fa-trophy"></i> Guest favourite</div>
+            <div class="badge-chip"><i class="fa-regular fa-star"></i> <%= rc ? `${avgR} rating` : "No rating" %></div>
+            <div class="badge-chip"><i class="fa-regular fa-message"></i> <%= rc %> reviews</div>
+          </div>
+
+          <h5 class="card-title mb-2">Hosted by <span class="text-primary fw-bold">@<%= listing.owner?.username || 'Unknown' %></span></h5>
+          <p class="card-text mb-3"><%= listing.description %></p>
+          <a class="list-group-item">💰 <strong>₹ <%= listing.price.toLocaleString("en-IN") %></strong> / night</a>
+          <ul class="list-group list-group-flush info-list mb-2">
+            <li class="list-group-item">📍 <%= listing.location %>, <%= listing.country %></li>
+          </ul>
+
+          <% if(currUser && listing.owner._id.equals(currUser._id)) { %>
+            <div class="d-flex gap-2">
+              <a href="/listings/<%= listing._id %>/edit" class="btn btn-warning fw-semibold">✏️ Edit</a>
+              <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE" class="m-0">
+                <button class="btn btn-danger fw-semibold">🗑️ Delete</button>
+              </form>
+            </div>
+          <% } %>
+        </div>
+      </div>
+      <!-- Calendar below all reviews -->
+      <section class="cal-wrap" id="dateRangeCal">
+        <div class="cal-top">
+          <div>
+            <div class="cal-title"><span id="calNights">Select dates</span> in <%= listing.location %></div>
+            <div class="cal-sub" id="calRangeLabel"></div>
+          </div>
+          <div class="cal-actions">
+            <button class="cal-btn" id="prevMonthBtn" aria-label="Previous Month">‹</button>
+            <button class="cal-btn" id="nextMonthBtn" aria-label="Next Month">›</button>
+            <span class="cal-clear" id="clearDates">Clear dates</span>
+          </div>
+        </div>
+        <div class="cal-months">
+          <div class="cal-month">
+            <div class="cal-caption" id="leftCaption"></div>
+            <div class="cal-grid" id="leftDOW"></div>
+            <div class="cal-grid" id="leftDays"></div>
+          </div>
+          <div class="cal-month">
+            <div class="cal-caption" id="rightCaption"></div>
+            <div class="cal-grid" id="rightDOW"></div>
+            <div class="cal-grid" id="rightDays"></div>
+          </div>
+        </div>
+      </section>
+      <hr>
+      <!-- Review Form -->
+      <div class="card border-0 rounded-4 mb-4">
+        <div class="card-body">
+          <% if(currUser) { %>
+            <h4 class="fw-bold mb-3 text-primary">Leave a Review</h4>
+            <form action="/listings/<%= listing._id %>/reviews" method="POST" novalidate>
+              <div class="mb-3">
+                <fieldset class="classic-rating">
+                  <input type="radio" id="star5" name="review[rating]" value="5" required />
+                  <label for="star5" title="Amazing">★</label>
+                  <input type="radio" id="star4" name="review[rating]" value="4" />
+                  <label for="star4" title="Very Good">★</label>
+                  <input type="radio" id="star3" name="review[rating]" value="3" />
+                  <label for="star3" title="Average">★</label>
+                  <input type="radio" id="star2" name="review[rating]" value="2" />
+                  <label for="star2" title="Not Good">★</label>
+                  <input type="radio" id="star1" name="review[rating]" value="1" />
+                  <label for="star1" title="Very Bad">★</label>
+                </fieldset>
+              </div>
+              <div class="mb-3">
+                <textarea class="form-control rounded-3 shadow-sm" name="review[comment]" rows="3" placeholder="Write your feedback..." required></textarea>
+              </div>
+              <button class="btn btn-primary rounded-3 fw-semibold">Submit Review</button>
+            </form>
+          <% } else { %>
+            <p class="text-muted m-0">Login to leave a review.</p>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+
+    
+    <!-- RIGHT 25%: Reserve card -->
+    <aside class="reserve-card reserve-sticky" id="reserveCard">
+      <div class="reserve-row">
+        <div class="reserve-price">₹ <%= listing.price.toLocaleString("en-IN") %> <small>/ night</small></div>
+        <%
+          let reviewCount = (listing.reviews?.length || 0);
+          let avgRating = 0;
+          if (reviewCount > 0) {
+            avgRating = listing.reviews.reduce((s,r)=>s+(+r.rating||0),0)/reviewCount;
+            avgRating = Number(avgRating.toFixed(1));
+          }
+        %>
+        <div class="text-muted" style="font-weight:700;">
+          <i class="fa-solid fa-star"></i>
+          <%= reviewCount ? `${avgRating} - ${reviewCount} reviews` : 'New' %>
+        </div>
+      </div>
+
+      <div class="reserve-grid">
+        <div>
+          <label for="ci">CHECK-IN</label>
+          <input id="ci" type="date" min="">
+        </div>
+        <div>
+          <label for="co">CHECKOUT</label>
+          <input id="co" type="date" min="">
+        </div>
+        <div style="grid-column:1/3">
+          <label for="guests">GUESTS</label>
+          <select id="guests">
+            <% for (let g=1; g<=10; g++){ %>
+              <option value="<%= g %>"><%= g %> guest<%= g>1 ? 's' : '' %></option>
+            <% } %>
+          </select>
+        </div>
+      </div>
+
+      <button class="reserve-btn" id="reserveBtn">Reserve</button>
+      <div class="reserve-note">You won't be charged yet</div>
+
+      <div class="reserve-fees" id="feeBox" style="display:none;">
+        <div class="line"><span id="nightsLine">₹ — × — nights</span><span id="baseAmt">₹ —</span></div>
+        <div class="line"><span>Service fee</span><span id="svcAmt">₹ —</span></div>
+        <div class="line"><span>Taxes</span><span id="taxAmt">₹ —</span></div>
+        <div class="line total"><span>Total before fees</span><span id="ttlAmt">₹ —</span></div>
+      </div>
+    </aside>
+  </div>
+  <!-- =================== 75/25 WRAPPER END =================== -->
+
+  <h5 class="fw-bold mb-3">All Reviews</h5>
+      <div class="row row-cols-1 row-cols-md-2 g-4">
+        <% if (listing.reviews && listing.reviews.length > 0) { %>
+          <% listing.reviews.forEach(review => { %>
+            <div class="col">
+              <div class="card review-card p-3 h-100">
+                <div class="d-flex align-items-start gap-3">
+                  <img src="<%= review.author?.avatar || 'https://snapynow.com/wp-content/uploads/2024/05/no-dp_16.webp' %>" width="45" height="45" class="rounded-circle shadow-sm" alt="">
+                  <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between">
+                      <div>
+                        <strong><%= review.author?.username || 'Anonymous' %></strong><br>
+                        <small class="text-muted">
+                          <%= review.createdAt ? review.createdAt.toLocaleDateString('en-US', { month:'long', year:'numeric' }) : '' %>
+                        </small>
+                      </div>
+                      <% if(currUser && review.author && review.author._id.equals(currUser._id)) { %>
+                        <form action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST" class="d-inline">
+                          <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this review?')">
+                            <i class="fa-solid fa-trash"></i>
+                          </button>
+                        </form>
+                      <% } %>
+                    </div>
+                    <div class="text-warning mt-1">
+                      <% let rating = Number(review.rating) || 0; %>
+                      <% for (let i = 0; i < rating; i++) { %>★<% } %>
+                      <% for (let i = rating; i < 5; i++) { %>☆<% } %>
+                    </div>
+                    <p class="mt-2 mb-0"><%= review.comment %></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+        <% } else { %>
+          <p class="text-muted">No reviews yet. Be the first to review!</p>
+        <% } %>
+      </div>
+
+  <hr class="my-4">
+  <div>
+    <h5 class="fw-bold mb-3"><i class="fa-regular fa-map"></i> Where you’ll be</h5>
+    <ul class="list-group list-group-flush info-list mb-2">
+      <li class="list-group-item">📍 <%= listing.location %>, <%= listing.country %></li>
+    </ul>
+    <div id="map" class="mb-4"></div>
+  </div>
+</div>
+
+<script src="/js/map.js"></script>
+<script>
+  (function(){
+    const btn = document.getElementById('shareBtn');
+    if(!btn) return;
+    btn.addEventListener('click', async () => {
+      if (navigator.share) {
+        try { await navigator.share({ title: document.title, text: "Check this listing!", url: location.href }); }
+        catch(_) {}
+      } else {
+        try { await navigator.clipboard.writeText(location.href); } catch(_){}
+        alert("🔗 Link copied to clipboard!");
+      }
+    });
+  })();
+
+  // Reserve card calculator (unchanged)
+  (function(){
+    const ci = document.getElementById('ci');
+    const co = document.getElementById('co');
+    const feeBox = document.getElementById('feeBox');
+    const nightsLine = document.getElementById('nightsLine');
+    const baseAmt = document.getElementById('baseAmt');
+    const svcAmt = document.getElementById('svcAmt');
+    const taxAmt = document.getElementById('taxAmt');
+    const ttlAmt = document.getElementById('ttlAmt');
+    const price = Number(<%= listing.price %>) || 0;
+
+    const today = new Date(); today.setHours(0,0,0,0);
+    ci.min = today.toISOString().slice(0,10);
+    co.min = today.toISOString().slice(0,10);
+
+    function inr(n){ return '₹ ' + (Math.round(n)).toLocaleString('en-IN'); }
+
+    function calc(){
+      if(!ci.value || !co.value) { feeBox.style.display='none'; return; }
+      const d1 = new Date(ci.value), d2 = new Date(co.value);
+      const diff = Math.round((d2 - d1) / (1000*60*60*24));
+      if (isNaN(diff) || diff <= 0) { feeBox.style.display='none'; return; }
+
+      const base = diff * price;
+      const service = base * 0.12;
+      const taxes = base * 0.18;
+      const total = base + service + taxes;
+
+      nightsLine.textContent = `${inr(price)} × ${diff} night${diff>1?'s':''}`;
+      baseAmt.textContent = inr(base);
+      svcAmt.textContent = inr(service);
+      taxAmt.textContent = inr(taxes);
+      ttlAmt.textContent = inr(total);
+      feeBox.style.display = 'block';
+    }
+
+    ci.addEventListener('change', () => { if (co.value && ci.value > co.value) co.value = ''; calc(); });
+    co.addEventListener('change', calc);
+    ci.addEventListener('change', () => {
+      if (!co.value && ci.value){
+        const d = new Date(ci.value); d.setDate(d.getDate()+1);
+        co.value = d.toISOString().slice(0,10);
+      }
+      calc();
+    });
+
+    const btn = document.getElementById('reserveBtn');
+    if (btn) btn.addEventListener('click', () => {
+      if (!ci.value || !co.value) { alert('Please select dates.'); return; }
+      alert('This is a demo reservation card.\nHook this up to your booking route.');
+    });
+  })();
+
+  /* Calendar logic */
+  (function(){
+    const leftCaption = document.getElementById('leftCaption');
+    const rightCaption = document.getElementById('rightCaption');
+    const leftDOW = document.getElementById('leftDOW');
+    const rightDOW = document.getElementById('rightDOW');
+    const leftDays = document.getElementById('leftDays');
+    const rightDays = document.getElementById('rightDays');
+    const prevBtn = document.getElementById('prevMonthBtn');
+    const nextBtn = document.getElementById('nextMonthBtn');
+    const clearBtn = document.getElementById('clearDates');
+    const calNights = document.getElementById('calNights');
+    const calRangeLabel = document.getElementById('calRangeLabel');
+
+    const ci = document.getElementById('ci');
+    const co = document.getElementById('co');
+
+    const today = new Date(); today.setHours(0,0,0,0);
+    let viewYear = today.getFullYear();
+    let viewMonth = today.getMonth();
+
+    let startDate = null;
+    let endDate = null;
+
+    const DOW = ['S','M','T','W','T','F','S'];
+
+    const fmt = d => d.toLocaleDateString('en-CA');
+    const nice = d => d.toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'});
+    const nights = () => (!startDate || !endDate) ? 0 : Math.round((endDate-startDate)/(1000*60*60*24));
+
+    function buildDOW(root){
+      root.innerHTML=''; DOW.forEach(ch=>{
+        const el=document.createElement('div'); el.className='cal-dow'; el.textContent=ch; root.appendChild(el);
+      });
+    }
+
+    function monthMatrix(y,m){
+      const first=new Date(y,m,1);
+      const start=new Date(first); start.setDate(1-first.getDay());
+      return Array.from({length:42},(_,i)=> new Date(start.getFullYear(),start.getMonth(),start.getDate()+i));
+    }
+
+    const isSameDay=(a,b)=> a&&b&&a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();
+    const isBetween=(d,a,b)=> a&&b&&d>a&&d<b;
+
+    function draw(){
+      const L=new Date(viewYear,viewMonth,1), R=new Date(viewYear,viewMonth+1,1);
+      leftCaption.textContent = L.toLocaleString('en-US',{month:'long',year:'numeric'});
+      rightCaption.textContent = R.toLocaleString('en-US',{month:'long',year:'numeric'});
+
+      const minYM = today.getFullYear()*12 + today.getMonth();
+      const curYM = viewYear*12 + viewMonth;
+      prevBtn.disabled = curYM<=minYM;
+
+      buildDOW(leftDOW); buildDOW(rightDOW);
+
+      leftDays.innerHTML=''; rightDays.innerHTML='';
+      monthMatrix(viewYear,viewMonth).forEach(d=> mkCell(d,leftDays,L.getMonth()));
+      monthMatrix(viewYear,viewMonth+1).forEach(d=> mkCell(d,rightDays,R.getMonth()));
+
+      const n = nights();
+      if (n>0){ calNights.textContent=`${n} night${n>1?'s':''} in ${listing.location}`; calRangeLabel.textContent=`${nice(startDate)} – ${nice(endDate)}`; }
+      else if(startDate){ calNights.textContent=`Select checkout in ${listing.location}`; calRangeLabel.textContent=`${nice(startDate)} – …`; }
+      else { calNights.textContent='Select dates'; calRangeLabel.textContent=''; }
+    }
+
+    function mkCell(d,container,monthShown){
+      const div=document.createElement('div'); div.className='cal-cell'; div.textContent=d.getDate();
+      if(d.getMonth()!==monthShown) div.classList.add('muted');
+      const isPast=d<today; if(isPast) div.classList.add('disabled');
+      if(startDate&&isSameDay(d,startDate)) div.classList.add('start','selected');
+      if(endDate&&isSameDay(d,endDate)) div.classList.add('end','selected');
+      if(startDate&&endDate&&isBetween(d,startDate,endDate)) div.classList.add('inrange');
+      if(!isPast && d.getMonth()===monthShown){ div.addEventListener('click',()=>onPick(d)); }
+      container.appendChild(div);
+    }
+
+    function onPick(d){
+      if(!startDate || (startDate && endDate)){ startDate=new Date(d); endDate=null; }
+      else{
+        if(d<=startDate){ startDate=new Date(d); endDate=null; }
+        else{
+          endDate=new Date(d);
+          ci.value=fmt(startDate); co.value=fmt(endDate);
+          ci.dispatchEvent(new Event('change')); co.dispatchEvent(new Event('change'));
+        }
+      }
+      draw();
+    }
+
+    prevBtn.addEventListener('click',()=>{ viewMonth--; if(viewMonth<0){viewMonth=11;viewYear--;} draw(); });
+    nextBtn.addEventListener('click',()=>{ viewMonth++; if(viewMonth>11){viewMonth=0;viewYear++;} draw(); });
+    clearBtn.addEventListener('click',()=>{ startDate=null; endDate=null; ci.value=''; co.value=''; ci.dispatchEvent(new Event('change')); draw(); });
+
+    if (ci.value) startDate = new Date(ci.value);
+    if (co.value) endDate = new Date(co.value);
+
+    draw();
+  })();
+</script>

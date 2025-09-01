@@ -1,0 +1,113 @@
+<!-- views/listings/new.ejs -->
+<div class="row mt-4">
+  <div class="col-lg-7 col-md-11 col-sm-10 mx-auto">
+    <div class="card shadow-lg border-0 rounded-4 overflow-hidden" 
+         style="background: linear-gradient(145deg, #ffffff, #f8f9fa); transition: transform 0.2s ease, box-shadow 0.2s ease;">
+      
+      <div class="card-header text-black text-center py-3">
+        <h3 class="mb-0 fw-bold">📢 Create A New Listing</h3>
+      </div>
+
+      <div class="card-body p-4"> 
+        <form method="POST" action="/listings" enctype="multipart/form-data" class="needs-validation" novalidate>
+          
+          <!-- Title -->
+          <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input
+              type="text"
+              name="listing[title]"
+              id="title"
+              placeholder="Add a catchy title"
+              class="form-control"
+              required
+              autocomplete="off"
+            />
+            <div class="invalid-feedback">Title is required.</div>
+          </div>
+
+          <!-- Description -->
+          <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea
+              name="listing[description]"
+              id="description"
+              class="form-control"
+              placeholder="Write a short description"
+              rows="3"
+              required
+              autocomplete="off"
+            ></textarea>
+            <div class="invalid-feedback">Description is required.</div>
+          </div>
+
+          <!-- Image -->
+          <div class="mb-3">
+            <label for="image" class="form-label">Upload Listing Image</label>
+            <input
+              type="file"
+              name="listing[image]"
+              id="image"
+              class="form-control"
+              required
+            />
+            <div class="invalid-feedback">Image is required.</div>
+          </div>
+
+          <div class="row">
+            <!-- Price -->
+            <div class="mb-3 col-md-4">
+              <label for="price" class="form-label">Price (₹)</label>
+              <input
+                type="number"
+                name="listing[price]"
+                id="price"
+                placeholder="1200"
+                class="form-control"
+                required
+                min="0"
+                autocomplete="off"
+              />
+              <div class="invalid-feedback">Price should be valid.</div>
+            </div>
+
+            <!-- Country -->
+            <div class="mb-3 col-md-8">
+              <label for="country" class="form-label">Country</label>
+              <input
+                type="text"
+                name="listing[country]"
+                id="country"
+                placeholder="India"
+                class="form-control"
+                required
+                autocomplete="country-name"
+              />
+              <div class="invalid-feedback">Country is required.</div>
+            </div>
+          </div>
+
+          <!-- Location -->
+          <div class="mb-3">
+            <label for="location" class="form-label">Location</label>
+            <input
+              type="text"
+              name="listing[location]"
+              id="location"
+              placeholder="Delhi, Mumbai..."
+              class="form-control"
+              required
+              autocomplete="address-level2"
+            />
+            <div class="invalid-feedback">Location is required.</div>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="btn btn-primary">➕  Add Listing</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+

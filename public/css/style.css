@@ -1,0 +1,186 @@
+/* css/style.css */
+
+body {
+    font-family: "Plus Jakarta Sans", sans-serif !important;
+    font-optical-sizing: auto !important;
+    font-weight: 400 !important; 
+    font-style: normal;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    flex: 1;
+}
+
+
+.navbar {
+    height: 5rem;
+    background-color: white;
+}
+
+.fa-compass {
+    color: #FF385C;
+    font-size: 2rem;
+}
+
+.nav-link {
+    color: #222222 !important;
+}
+
+.f-info-links a {
+    text-decoration: none;
+    color: #222222;
+    
+}
+
+.f-info-links a:hover {
+    text-decoration: underline;
+    
+}
+
+.f-info-links,
+.f-info-socials,
+.f-info-brand {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.f-info-socials i {
+    font-size: 1.4rem; 
+    margin-right: 1rem;
+}
+
+.f-info {
+    text-align: center;
+    height: 8rem;
+    background-color: #ebebeb;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: space-evenly;
+}
+
+
+/* Cards */
+
+.card {
+    border: none !important;
+    margin-bottom: 2rem;
+}
+
+.card-img-top {
+    border-radius: 1rem !important;
+    width: 100% !important;
+    object-fit: cover !important;
+}
+
+.card-body {
+    padding: 0 !important;
+}
+
+.card-text {
+    font-weight: 400;
+}
+
+.listing-link {
+    text-decoration: none;
+}
+
+ /* Card Efact */
+
+/* Sirf index page ke liye hover effect */
+.listing-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+}
+
+.listing-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: white;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 1rem;
+}
+
+.listing-card:hover .listing-overlay {
+    opacity: 0.2;
+}
+
+
+/* New Page */
+
+.add-btn {
+    background-color: #fe424d !important;
+    border: none !important;
+}
+
+/* Edit Page */
+
+.edit-btn {
+    background-color: #fe424d !important;
+    border: none !important;
+}
+
+
+/* Show Page */
+
+.show-img {
+    height: 45vh;
+}
+
+.show-card {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+
+.btn-edit {
+    background-color: #fe424d !important;
+    border: none !important;
+    color: #ebebeb !important;
+    
+}
+
+
+/* Map */
+
+#map {
+    width: 100%;
+    height: 320px;
+    border-radius: 12px;
+}
+
+
+
+
+.house-marker {
+  background-image: url('https://cdn-icons-png.flaticon.com/512/69/69524.png'); /* ✅ direct PNG link */
+  background-size: cover;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

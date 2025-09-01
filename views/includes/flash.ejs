@@ -1,0 +1,167 @@
+<!-- <style>
+  .success-alert {
+    max-width: 520px;
+    margin: 1rem auto;
+    padding: 1rem 1.4rem;
+    font-size: 0.95rem;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #e6fffa, #d1fae5);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    animation: fadeIn 0.4s ease-out;
+  }
+
+  .success-content {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    color: #065f46;
+  }
+
+  .success-content i {
+    font-size: 1.4rem;
+    color: #059669;
+  }
+
+  .success-close {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: #047857;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .success-close:hover {
+    color: #064e3b;
+    transform: scale(1.1);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<% if (success && success.length) { %>
+  <% success.forEach(msg => { %>
+    <div class="success-alert">
+      <div class="success-content">
+        <i class="fas fa-check-circle"></i>
+        <span><%= msg %></span>
+      </div>
+      <button class="success-close" onclick="this.parentElement.remove()">
+        &times;
+      </button>
+    </div>
+  <% }) %>
+<% } %>
+
+
+
+ -->
+
+
+
+ <style>
+  /* SUCCESS ALERT */
+  .success-alert {
+    max-width: 520px;
+    margin: 1rem auto;
+    padding: 1rem 1.4rem;
+    font-size: 0.95rem;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #e6fffa, #d1fae5);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    animation: fadeIn 0.4s ease-out;
+  }
+  .success-content {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    color: #065f46;
+  }
+  .success-content i {
+    font-size: 1.4rem;
+    color: #059669;
+  }
+
+  /* ERROR ALERT */
+  .error-alert {
+    max-width: 520px;
+    margin: 1rem auto;
+    padding: 1rem 1.4rem;
+    font-size: 0.95rem;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #fef2f2, #fee2e2);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    animation: fadeIn 0.4s ease-out;
+  }
+  .error-content {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    color: #991b1b;
+  }
+  .error-content i {
+    font-size: 1.4rem;
+    color: #dc2626;
+  }
+
+  /* CLOSE BUTTON (same for both) */
+  .alert-close {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .alert-close:hover {
+    transform: scale(1.1);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+
+
+<% if (success && success.length) { %>
+  <% success.forEach(msg => { %>
+    <div class="success-alert">
+      <div class="success-content">
+        <i class="fas fa-check-circle"></i>
+        <span><%= msg %></span>
+      </div>
+      <button class="alert-close" onclick="this.parentElement.remove()">&times;</button>
+    </div>
+  <% }) %>
+<% } %>
+
+<% if (error && error.length) { %>
+  <% error.forEach(msg => { %>
+    <div class="error-alert">
+      <div class="error-content">
+        <i class="fas fa-exclamation-circle"></i>
+        <span><%= msg %></span>
+      </div>
+      <button class="alert-close" onclick="this.parentElement.remove()">&times;</button>
+    </div>
+  <% }) %>
+<% } %>

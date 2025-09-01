@@ -1,0 +1,62 @@
+<style>
+  .error-alert {
+    max-width: 520px;
+    margin: 2rem auto;
+    padding: 1.2rem 1.5rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #fff5f5, #ffeaea);
+    border: 1px solid rgba(226, 60, 60, 0.3);
+    box-shadow: 0 4px 12px rgba(226, 60, 60, 0.15);
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    animation: fadeIn 0.4s ease-out;
+  }
+
+  .error-alert:hover {
+    box-shadow: 0 8px 20px rgba(226, 60, 60, 0.25);
+  }
+
+  .error-icon {
+    flex-shrink: 0;
+    font-size: 2rem;
+    color: #b22222;
+    margin-top: 0.2rem;
+  }
+
+  .error-content h4 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    color: #8b1a1a;
+  }
+
+  .error-content p {
+    margin: 0;
+    color: #5a1a1a;
+    white-space: pre-line; 
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<div class="error-alert" role="alert">
+  <div class="error-icon">
+    <i class="fas fa-exclamation-circle"></i>
+  </div>
+  <div class="error-content">
+    <h4>Error <%= statusCode %></h4>
+    <p><%= message %></p>
+  </div>
+</div>
+
+
+
+
+
+
