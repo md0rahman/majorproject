@@ -1,0 +1,266 @@
+<!-- views/home.ejs -->
+
+<style>
+.hero {
+  margin-top: 3rem;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 5rem;
+  position: relative;
+  flex-direction: row;
+}
+
+/* ✅ Desktop pe background image */
+.hero-bg {
+  height: 65vh;
+  width: 100%;
+  background: url('https://a0.muscache.com/im/pictures/9caaca2d-6892-4638-b675-6a879974f5ed.jpg?im_w=1920') 
+              no-repeat center center/cover;
+  border-radius: 14px;
+  margin-left: 15rem;
+}
+
+/* ✅ Mobile ke liye image (default hidden) */
+.hero-img {
+  display: none;
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+.search-box {
+  position: absolute;
+  left: 0%;
+  background: #fff;
+  box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.15);
+  border-radius: 14px;
+  padding: 1.5rem;
+  max-width: 420px;
+  z-index: 5;
+}
+
+.search-box input,
+.search-box select {
+  border: 1px solid #ddd;
+  transition: all 0.2s ease-in-out;
+}
+
+.search-box input:focus,
+.search-box select:focus {
+  border-color: #ff385c;
+  box-shadow: 0 0 6px rgba(255, 56, 92, 0.3);
+}
+
+/* ✅ Amenities Card Styling */
+.amenities .card {
+  border: 1px solid #ccc !important;
+  border-radius: 12px;
+  background: #fff;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.8rem;
+  padding: 1rem 1.2rem;
+  cursor: pointer;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+  font-size: 0.95rem;
+}
+
+/* Icon */
+.amenities .card i {
+  font-size: 1.3rem;
+  color: #333;
+  flex-shrink: 0;
+}
+
+/* Text */
+.amenities .card span {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #333;
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Arrow */
+.amenities .card .arrow {
+  font-size: 1rem;
+  color: #666;
+  margin-left: auto;
+}
+
+/* ✅ Mobile Responsive Fix */
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+    padding-left: 0;
+    margin-top: 1rem;
+  }
+
+  .hero-bg {
+    display: none; /* Background hatao */
+  }
+
+  .hero-img {
+    display: block; /* Normal image dikhado */
+  }
+
+  .search-box {
+    position: relative;
+    margin-top: 0.3rem;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .amenities .card {
+    font-size: 0.9rem;
+    padding: 0.9rem 1rem;
+  }
+  .amenities .card i {
+    font-size: 1.2rem;
+  }
+  .amenities h2 {
+    font-size: 1.2rem;
+  }
+  .amenities p {
+    font-size: 0.9rem;
+  }
+}
+</style>
+
+<div class="container-fluid p-0">
+
+  <!-- ✅ Hero Section -->
+  <section class="hero">
+    <!-- Mobile ke liye image -->
+    <img src="https://a0.muscache.com/im/pictures/9caaca2d-6892-4638-b675-6a879974f5ed.jpg?im_w=1920" 
+         alt="Hero" class="hero-img">
+
+    <!-- Desktop ke liye background -->
+    <div class="hero-bg"></div>
+
+    <!-- Search Box -->
+    <div class="search-box">
+      <h3 class="fw-bold mb-2">Find places to stay on Wanderlust</h3>
+      <p class="text-muted mb-4" style="font-size: 0.95rem;">
+        Discover entire homes and rooms perfect for any trip.
+      </p>
+
+      <form action="/listings/search" method="GET">
+        <!-- Dates -->
+        <div class="row g-2 mb-3">
+          <div class="col">
+            <label class="form-label fw-semibold small">CHECK IN</label>
+            <input type="date" class="form-control p-3 rounded-2">
+          </div>
+          <div class="col">
+            <label class="form-label fw-semibold small">CHECK OUT</label>
+            <input type="date" class="form-control p-3 rounded-2">
+          </div>
+        </div>
+
+        <!-- Guests -->
+        <div class="row g-2 mb-4">
+          <div class="col">
+            <label class="form-label fw-semibold small">ADULTS</label>
+            <select class="form-select p-3 rounded-2">
+              <option>1</option>
+              <option selected>2</option>
+              <option>3</option>
+              <option>4+</option>
+            </select>
+          </div>
+          <div class="col">
+            <label class="form-label fw-semibold small">CHILDREN</label>
+            <select class="form-select p-3 rounded-2">
+              <option selected>0</option>
+              <option>1</option>
+              <option>2</option>
+              <option>3+</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Button -->
+        <button type="submit" class="btn w-100 text-white fw-bold py-2" 
+                style="background: linear-gradient(90deg,#ff385c,#e61e4d); border-radius: 8px; font-size: 1rem;">
+          Search
+        </button>
+      </form>
+    </div>
+  </section>
+</div>
+
+<!-- ✅ Amenities Section -->
+<section class="amenities mt-4">
+  <div class="container">
+    <h2>Get specific with your favourite amenities</h2>
+    <p>Choose from top features like these — and more — for a personalised stay.</p>
+
+    <div class="row g-3">
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <a href="/listings?amenity=pool" class="card">
+          <i class="fa-solid fa-water-ladder"></i>
+          <span>Pool</span>
+          <span class="arrow">›</span>
+        </a>
+      </div>
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <a href="/listings?amenity=parking" class="card">
+          <i class="fa-solid fa-square-parking"></i>
+          <span>Free parking</span>
+          <span class="arrow">›</span>
+        </a>
+      </div>
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <a href="/listings?amenity=washing-machine" class="card">
+          <i class="fa-solid fa-soap"></i>
+          <span>Washing machine</span>
+          <span class="arrow">›</span>
+        </a>
+      </div>
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <a href="/listings?amenity=ac" class="card">
+          <i class="fa-solid fa-snowflake"></i>
+          <span>AC</span>
+          <span class="arrow">›</span>
+        </a>
+      </div>
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <a href="/listings?amenity=fireplace" class="card">
+          <i class="fa-solid fa-fire"></i>
+          <span>Fireplace</span>
+          <span class="arrow">›</span>
+        </a>
+      </div>
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <a href="/listings?amenity=tv" class="card">
+          <i class="fa-solid fa-tv"></i>
+          <span>TV</span>
+          <span class="arrow">›</span>
+        </a>
+      </div>
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <a href="/listings?amenity=heating" class="card">
+          <i class="fa-solid fa-temperature-high"></i>
+          <span>Heating</span>
+          <span class="arrow">›</span>
+        </a>
+      </div>
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <a href="/listings?amenity=barbeque" class="card">
+          <i class="fa-solid fa-bacon"></i>
+          <span>Barbeque</span>
+          <span class="arrow">›</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

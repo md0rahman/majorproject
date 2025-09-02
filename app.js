@@ -100,9 +100,8 @@ app.use(async (req, res, next) => {
 
 // ✅ Routes
 app.get("/", (req, res) => {
-  res.redirect("/listings");
+  res.render("home"); // Home page render karega
 });
-
 
 app.use("/listings", listingsRoutes);
 app.use("/listings/:id/reviews", reviewsRoutes);

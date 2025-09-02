@@ -55,22 +55,22 @@ const listingSchema = new Schema(
       },
     },
 
-    category: {
-  type: String,
-  enum: [
-    "Trending",
-    "Rooms",
-    "Iconic Cities",
-    "Mountain",
-    "Castles",
-    "Pools",
-    "Camping",
-    "Arctic",
-    "Design",
-    "Breakfasts"
-  ],
-  default: "Mountain" 
-},
+//     category: {
+//   type: String,
+//   enum: [
+//     "Trending",
+//     "Rooms",
+//     "Iconic Cities",
+//     "Mountain",
+//     "Castles",
+//     "Pools",
+//     "Camping",
+//     "Arctic",
+//     "Design",
+//     "Breakfasts"
+//   ],
+//   default: "Mountain" 
+// },
 
 
   },
