@@ -13,9 +13,10 @@ function isValidObjectId(id) {
 
 // ----------------- Controllers -----------------
 
-// Show all listings
+// ✅ Show all listings (with reviews populated)
 module.exports.index = async (req, res) => {
-  const allListings = await Listing.find({});
+  const allListings = await Listing.find({})
+    .populate({ path: "reviews", select: "rating" });
   res.render("listings/index", { allListings });
 };
 

@@ -8,22 +8,22 @@
     }
 
     .listing-card img {
-      height: 11rem !important; /* aur chhoti image */
+      height: 14rem !important;
     }
 
     .card-body h5 {
-      font-size: 0.9rem; /* thoda chhota title */
+      font-size: 0.9rem;
     }
 
     .card-body p {
-      font-size: 0.75rem; /* price bhi chhota */
+      font-size: 0.75rem;
     }
   }
 
-  /* ✅ Small Devices (portrait tablets ≥576px and <768px) */
+  /* ✅ Small Devices (≥576px and <768px) */
   @media (min-width: 576px) and (max-width: 768px) {
     .listing-card img {
-      height: 13rem !important;
+      height: 14rem !important;
     }
 
     .card-body h5 {
@@ -35,7 +35,7 @@
     }
   }
 
-  /* ✅ Medium Devices (landscape tablets ≥768px and <992px) */
+  /* ✅ Medium Devices (≥768px and <992px) */
   @media (min-width: 768px) and (max-width: 992px) {
     .listing-card img {
       height: 15rem !important;
@@ -50,7 +50,7 @@
     }
   }
 
-  /* ✅ Large Devices (laptops/desktops ≥992px and <1200px) */
+  /* ✅ Large Devices (≥992px and <1200px) */
   @media (min-width: 992px) and (max-width: 1200px) {
     .listing-card img {
       height: 17rem !important;
@@ -65,10 +65,10 @@
     }
   }
 
-  /* ✅ Extra Large Devices (desktops ≥1200px) */
+  /* ✅ Extra Large Devices (≥1200px) */
   @media (min-width: 1200px) {
     .listing-card img {
-      height: 20rem !important; /* full size */
+      height: 20rem !important;
     }
 
     .card-body h5 {
@@ -78,6 +78,20 @@
     .card-body p {
       font-size: 1rem;
     }
+  }
+
+  /* ✅ New features styling */
+  .listing-features {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .listing-features i {
+    color: #ff385c;
   }
 </style>
 
@@ -91,7 +105,8 @@
       <p>Tap the heart on any listing to save it.</p>
     </div>
   <% } else { %>
-    <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 g-4">
+    <!-- ✅ row-cols-1 for mobile -->
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 g-4">
       <% allListings.forEach(listing => { %>
         <div class="col">
           <a href="/listings/<%= listing._id %>" class="text-decoration-none text-dark">
@@ -103,14 +118,14 @@
                    alt="Listing" 
                    style="height: 20rem; object-fit: cover;">
 
-              <!-- ❤️ Heart Icon (always red on wishlist page) -->
+              <!-- ❤️ Heart Icon -->
               <div class="position-absolute top-0 end-0 p-2">
                 <i class="fa-solid fa-heart fs-4 heartIcon"
                    data-id="<%= listing._id %>"
                    style="cursor: pointer; color: red;"></i>
               </div>
 
-              <!-- Guest Favorite badge (same style as index) -->
+              <!-- Guest Favorite badge -->
               <div class="position-absolute top-0 start-0 m-2 px-3 py-1 bg-white rounded-pill shadow-sm"
                    style="border-radius: 12px; line-height: 1.1; height: 26px; display: flex; align-items: center;">
                 <small class="text-dark fw-bold" style="font-size: 11px;">Guest Favorite</small>
@@ -119,6 +134,13 @@
               <!-- Card Body -->
               <div class="card-body">
                 <h5 class="card-title mb-2"><%= listing.title %></h5>
+                 <!-- ✅ New Features -->
+                <div class="listing-features mb-2">
+                  <span><i class="fa-solid fa-star"></i> 4.8</span>
+                  <span><i class="fa-solid fa-location-dot"></i> <%= listing.location || "Unknown" %></span>
+                  <span>120 reviews</span>
+                </div>
+
                 <p class="card-text text-muted mb-0">
                   ₹ <%= listing.price.toLocaleString("en-IN") %> / night
                 </p>

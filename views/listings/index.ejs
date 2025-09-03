@@ -13,7 +13,7 @@
   /* Mobile ke liye styling (max 576px tak) */
   @media (max-width: 576px) {
     .listing-card { border-radius: 10px; }
-    .listing-card img { height: 12rem !important; }
+    .listing-card img { height: 14rem !important; }
     .card-body h5 { font-size: 0.95rem; }
     .card-body p { font-size: 0.8rem; }
     .filters-container { gap: 0.4rem; padding: 0.4rem; }
@@ -56,6 +56,20 @@
 
   .tax-info { display:none; }
   .tax-switch i { color:#6c6a6a; }
+
+  /* ✅ New features styling */
+  .listing-features {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .listing-features i {
+    color: #ff385c;
+  }
 </style>
 
 <div class="filters-container">
@@ -85,14 +99,22 @@
   </div>
 </div>
 
-<div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 g-4">
+<!-- ✅ row-cols-1 for mobile -->
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 g-4">
   <% if (allListings.length === 0) { %>
     <div class="col-12 text-center mt-5 ">
       <h3 class="text-muted">😔 No results found</h3>
       <p>Try searching with different destinations.</p>
     </div>
   <% } else { %>
-    <% allListings.forEach(listing => { %>
+    <% allListings.forEach(listing => { 
+         let reviewCount = (listing.reviews?.length || 0);
+         let avgRating = 0;
+         if (reviewCount > 0) {
+           avgRating = listing.reviews.reduce((s,r)=>s+(+r.rating||0),0)/reviewCount;
+           avgRating = Number(avgRating.toFixed(1));
+         }
+    %>
       <div class="col">
         <a href="/listings/<%= listing._id %>" class="text-decoration-none text-dark">
           <div class="card h-100 position-relative listing-card">
@@ -111,6 +133,13 @@
 
             <div class="card-body">
               <h5 class="card-title mb-2"><%= listing.title %></h5>
+
+              <!-- ✅ New Features (Dynamic from DB) -->
+              <div class="listing-features mb-2">
+                <span><i class="fa-solid fa-star"></i> <%= reviewCount ? avgRating : 'New' %></span>
+                <span><i class="fa-solid fa-location-dot"></i> <%= listing.location || "Unknown" %></span>
+                <span><%= reviewCount %> reviews</span>
+              </div>
 
               <p class="card-text text-muted mb-0">
                 ₹ <%= listing.price.toLocaleString("en-IN") %> / night
