@@ -1,4 +1,3 @@
-//routes/listing.js
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
@@ -24,34 +23,43 @@ router
 // New form
 router.get("/new", isLoggedIn, listingController.renderNewForm);
 
-// ✅ Filter by category (uparse)
-router.get("/category/:name", wrapAsync(async (req, res) => {
-  const { name } = req.params;
-  const listings = await Listing.find({ category: name });
-  res.render("listings/index", { allListings: listings });
-}));
+// ✅ Filter by category (uparse) — POPULATE reviews so rating is available in template
+router.get(
+  "/category/:name",
+  wrapAsync(async (req, res) => {
+    const { name } = req.params;
+    const listings = await Listing.find({ category: name })
+      .populate({ path: "reviews", select: "rating" });
+    res.render("listings/index", { allListings: listings });
+  })
+);
 
-// ✅ Search (bhi upar hona chahiye)
-router.get("/search", wrapAsync(async (req, res) => {
-  const { search } = req.query;
-  let query = {};
+// ✅ Search (bhi upar hona chahiye) — POPULATE reviews as well
+router.get(
+  "/search",
+  wrapAsync(async (req, res) => {
+    const { search } = req.query;
+    let query = {};
 
-  if (search) {
-    query = {
-      $or: [
-        { title: { $regex: search, $options: "i" } },
-        { location: { $regex: search, $options: "i" } },
-        { country: { $regex: search, $options: "i" } }
-      ]
-    };
-  }
+    if (search) {
+      query = {
+        $or: [
+          { title: { $regex: search, $options: "i" } },
+          { location: { $regex: search, $options: "i" } },
+          { country: { $regex: search, $options: "i" } }
+        ]
+      };
+    }
 
-  const listings = await Listing.find(query);
-  res.render("listings/index", { allListings: listings });
-}));
+    const listings = await Listing.find(query)
+      .populate({ path: "reviews", select: "rating" });
+    res.render("listings/index", { allListings: listings });
+  })
+);
 
 // Edit form
-router.get("/:id/edit",
+router.get(
+  "/:id/edit",
   isLoggedIn,
   isOwner,
   wrapAsync(listingController.editListing)

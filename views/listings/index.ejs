@@ -70,6 +70,65 @@
   .listing-features i {
     color: #ff385c;
   }
+
+  /* Styled listing-features (modern pill chips with icons) */
+.listing-features {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 0.95rem;
+  color: #454545;
+  margin-top: 0.5rem;
+}
+
+/* Each pill */
+.listing-features > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #fff;
+  border: 1px solid rgba(17,24,39,0.06);
+  padding: 0.45rem 0.7rem;
+  border-radius: 999px;
+  box-shadow: 0 8px 20px rgba(15,23,42,0.04);
+  min-height: 34px;
+  line-height: 1;
+  transition: transform .12s ease, box-shadow .12s ease;
+  white-space: nowrap;
+}
+
+/* Slight lift on hover */
+.listing-features > span:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px rgba(15,23,42,0.07);
+}
+
+/* Icon colors — keep semantic & visible */
+.listing-features i.fa-star { color: #ffb400; /* warm gold */ }
+.listing-features i.fa-location-dot { color: #ff385c; /* primary */ }
+.listing-features i.fa-message, .listing-features i.fa-regular { color: #6b7280; }
+
+/* Make the rating value slightly bolder */
+.listing-features .rating-value {
+  font-weight: 700;
+  color: #111827;
+}
+
+/* Compact on very small screens */
+@media (max-width: 420px) {
+  .listing-features { gap: 0.35rem; font-size: 0.88rem; }
+  .listing-features > span { padding: 0.32rem 0.55rem; min-height: 30px; }
+  .listing-features span .fa-star { font-size: 0.95rem; }
+}
+
+.listing-features i {
+  color: #d4a300 !important;  /* golden shade */
+}
+
+
+
+
 </style>
 
 <div class="filters-container">
@@ -128,18 +187,17 @@
             </div>
 
             <div class="position-absolute top-0 start-0 m-2 px-3 py-1 bg-white rounded-pill shadow-sm" style="border-radius:12px; line-height:1.1; height:26px; display:flex; align-items:center;">
-              <small class="text-dark fw-bold" style="font-size:11px;">Guest Favorite</small>
+              <small class="text-dark fw-bold" style="font-size:11px;"><i class="fa-solid fa-trophy" style="color:#d4a300;"></i>&nbsp;Guest Favorite</small>
             </div>
 
             <div class="card-body">
-              <h5 class="card-title mb-2"><%= listing.title %></h5>
-
               <!-- ✅ New Features (Dynamic from DB) -->
               <div class="listing-features mb-2">
                 <span><i class="fa-solid fa-star"></i> <%= reviewCount ? avgRating : 'New' %></span>
                 <span><i class="fa-solid fa-location-dot"></i> <%= listing.location || "Unknown" %></span>
-                <span><%= reviewCount %> reviews</span>
+                <span><i class="fa-regular fa-message"></i> <%= reviewCount %> reviews</span>
               </div>
+              <h5 class="card-title mb-2" style="font-size:18px;"><%= listing.title %></h5>
 
               <p class="card-text text-muted mb-0">
                 ₹ <%= listing.price.toLocaleString("en-IN") %> / night
