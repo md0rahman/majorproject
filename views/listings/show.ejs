@@ -126,6 +126,127 @@
 .cal-cell.start,.cal-cell.end{background:#ff2c72;color:#fff}
 .cal-btn{width:32px;height:32px;border-radius:50%;border:1px solid #e5e7eb;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .cal-btn:disabled{opacity:.4;cursor:not-allowed}
+
+ /* Hosting / highlights — realistic Airbnb-like card */
+  .hosting-info {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 18px 0;
+    border-top: 1px solid rgba(0,0,0,0.05);
+    margin-bottom: 18px;
+  }
+
+  .host-avatar {
+    flex: 0 0 50px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #fff;
+    box-shadow: 0 6px 18px rgba(16,24,40,0.06);
+  }
+  .host-avatar img { width:100%; height:100%; object-fit:cover; display:block; }
+
+  .host-meta {
+    flex: 1;
+    min-width: 0;
+  }
+  .host-meta .host-name {
+    font-weight:700;
+    font-size:0.98rem;
+    color:var(--text, #111);
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .host-meta .host-sub {
+    color:var(--muted, #6b7280);
+    font-size:0.92rem;
+    margin-top:4px;
+  }
+
+  .hosting-highlights {
+    display:grid;
+    grid-template-columns: 1fr;
+    gap:14px;
+    margin-top:16px;
+  }
+
+  .highlight-row {
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+  }
+  .highlight-ico {
+    width:36px;
+    height:36px;
+    border-radius:8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(180deg, #fff, #fbfbfc);
+    border:1px solid rgba(0,0,0,0.04);
+    box-shadow: 0 6px 18px rgba(16,24,40,0.04);
+    color:#d4a300;
+    font-size:18px;
+    flex: 0 0 36px;
+  }
+  .highlight-body { font-size:0.95rem; color:var(--muted,#6b7280); line-height:1.45; }
+  .highlight-body strong { display:block; color:#111; font-weight:700; margin-bottom:4px; }
+
+  /* compact divider & spacing for mobile */
+  @media (max-width:767.98px){
+    .hosting-info{ padding:12px 0; gap:12px; }
+    .host-avatar{ width:48px; height:48px; }
+    .highlight-ico{ width:34px; height:34px; font-size:16px; }
+  }
+
+  /* subtle "show more" action */
+  .host-more {
+    margin-top:14px;
+    display:flex;
+    gap:16px;
+    align-items:center;
+  }
+
+  /* ======= What this place offers (amenities) ======= */
+  .offers-section { margin-top:20px; padding-top:12px; border-top: 1px solid rgba(0,0,0,0.04); }
+  .offers-section h5 { font-size:1.1rem; font-weight:700; margin-bottom:12px; color:var(--text); }
+  .offers-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 14px 28px;
+    align-items:start;
+  }
+  .offer {
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    color:var(--text);
+  }
+  .offer i {
+    flex: 0 0 36px;
+    width:36px;
+    height:36px;
+    border-radius:8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#fff;
+    border:1px solid rgba(0,0,0,0.04);
+    box-shadow: 0 6px 18px rgba(16,24,40,0.04);
+    color:var(--muted);
+    font-size:16px;
+  }
+  .offer .label { font-weight:700; color:#111; font-size:0.96rem; }
+  .offer .sub { color:var(--muted); font-size:0.92rem; margin-top:4px; }
+
+  @media (max-width:767.98px){
+    .offers-grid { grid-template-columns: 1fr; gap:12px 12px; }
+    .offer i { width:34px; height:34px; font-size:15px; }
+  }
+
 </style>
 
 <div class="container show-wrap">
@@ -172,12 +293,131 @@
             <div class="badge-chip"><i class="fa-regular fa-message"></i> <%= rc %> reviews</div>
           </div>
 
-          <h5 class="card-title mb-2">Hosted by <span class="text-primary fw-bold">@<%= listing.owner?.username || 'Unknown' %></span></h5>
+          
           <p class="card-text mb-3"><%= listing.description %></p>
           <a class="list-group-item">💰 <strong>₹ <%= listing.price.toLocaleString("en-IN") %></strong> / night</a>
           <ul class="list-group list-group-flush info-list mb-2">
             <li class="list-group-item">📍 <%= listing.location %>, <%= listing.country %></li>
           </ul>
+          
+          <div class="hosting-info" role="region" aria-labelledby="hostingInfoTitle">
+          <!-- avatar -->
+          <div class="host-avatar" aria-hidden="true">
+            <img src="<%= listing.owner?.avatar || 'https://a0.muscache.com/defaults/user_pic-225x225.png' %>" alt="Host avatar">
+          </div>
+
+          <!-- host meta + highlights -->
+          <div class="host-meta">
+            <!-- Host title (keeps dynamic username) -->
+            <div class="host-name" id="hostingInfoTitle">
+              Hosted by <span style="margin-left:6px; color:var(--primary,#ff385c);">@<%= listing.owner?.username || 'Unknown' %></span>
+            </div>
+
+            <!-- subline — Superhost & tenure (static text changed to realistic formatting) -->
+            <div class="host-sub">
+              <span style="font-weight:700; color:#111;">Superhost</span> · <span>1 year hosting</span>
+            </div>
+
+            <!-- highlights list (icons + text) -->
+            <div class="hosting-highlights" id="hostingHighlights">
+              <div class="highlight-row">
+            <div class="highlight-ico" aria-hidden="true">
+              <i class="fa-solid fa-trophy" style="font-size:16px;"></i>
+            </div>
+            <div class="highlight-body">
+              <strong>Top 5% of homes</strong>
+              This home is highly ranked based on ratings, reviews and reliability.
+            </div>
+          </div>
+
+          <div class="highlight-row">
+            <div class="highlight-ico" aria-hidden="true">
+              <!-- using spa/hot tub icon if available; fallback shown by fontawesome -->
+              <i class="fa-solid fa-hot-tub" style="font-size:16px;"></i>
+            </div>
+          <div class="highlight-body">
+            <strong>Unwind in the hot tub</strong>
+            This is one of the few places in the area with this amenity.
+          </div>
+        </div>
+
+        <div class="highlight-row">
+          <div class="highlight-ico" aria-hidden="true">
+            <i class="fa-solid fa-calendar-check" style="font-size:16px;"></i>
+          </div>
+          <div class="highlight-body">
+            <strong>Free cancellation for 48 hours</strong>
+            Get a full refund if you change your mind.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+          
+          <!-- ===== Inserted: What this place offers (amenities) ===== -->
+          <div class="offers-section" aria-labelledby="offersTitle">
+            <h5 id="offersTitle">What this place offers</h5>
+
+            <div class="offers-grid">
+              <div class="offer">
+                <i class="fa-solid fa-umbrella-beach" aria-hidden="true"></i>
+                <div>
+                  <div class="label">Resort view</div>
+                </div>
+              </div>
+
+              <div class="offer">
+                <i class="fa-solid fa-mountain" aria-hidden="true"></i>
+                <div>
+                  <div class="label">Valley view</div>
+                </div>
+              </div>
+
+              <div class="offer">
+                <i class="fa-solid fa-water" aria-hidden="true"></i>
+                <div>
+                  <div class="label">Waterfront</div>
+                </div>
+              </div>
+
+              <div class="offer">
+                <i class="fa-solid fa-utensils" aria-hidden="true"></i>
+                <div>
+                  <div class="label">Kitchen</div>
+                </div>
+              </div>
+
+              <div class="offer">
+                <i class="fa-solid fa-wifi" aria-hidden="true"></i>
+                <div>
+                  <div class="label">Wifi</div>
+                </div>
+              </div>
+
+              <div class="offer">
+                <i class="fa-solid fa-car" aria-hidden="true"></i>
+                <div>
+                  <div class="label">Free parking on premises</div>
+                </div>
+              </div>
+
+              <div class="offer">
+                <i class="fa-solid fa-hot-tub-person" aria-hidden="true"></i>
+                <div>
+                  <div class="label">Hot tub</div>
+                </div>
+              </div>
+
+              <div class="offer">
+                <i class="fa-solid fa-video" aria-hidden="true"></i>
+                <div>
+                  <div class="label">Exterior security cameras on property</div>
+                </div>
+              </div>
+            </div>   
+          </div>
+          <hr>
+          <!-- ===== end amenities ===== -->
 
           <% if(currUser && listing.owner._id.equals(currUser._id)) { %>
             <div class="d-flex gap-2">

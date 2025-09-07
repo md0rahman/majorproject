@@ -1,15 +1,124 @@
 <!-- views/listings/new.ejs -->
+<style>
+  /* Premium / Real-world polish for the existing form (no new fields) */
+  :root{
+    --gold: #d4a300;
+    --gold-dark: #b38b00;
+    --muted: #6b7280;
+    --surface: #ffffff;
+    --glass: rgba(255,255,255,0.6);
+    --card-radius: 16px;
+    --soft-shadow: 0 10px 30px rgba(16,24,40,0.08);
+    --xl-shadow: 0 18px 50px rgba(16,24,40,0.10);
+  }
+
+  /* subtle global reset for the card area */
+  .listing-card {
+    border-radius: var(--card-radius);
+    overflow: hidden;
+    border: 1px solid rgba(15,23,42,0.04);
+    background: linear-gradient(180deg, #ffffff 0%, rgba(212,163,0,0.03) 20%, #fbfcfd 60%, #f6f7f5 100%);
+    box-shadow: var(--xl-shadow);
+    transition: transform .18s ease, box-shadow .18s ease;
+    will-change: transform;
+  }
+  .listing-card:hover { transform: translateY(-4px); box-shadow: 0 30px 70px rgba(16,24,40,0.12); }
+
+  .listing-card .card-header {
+    padding: 1.1rem 1.5rem;
+    border-bottom: 1px solid rgba(15,23,42,0.03);
+    background: linear-gradient(90deg, rgba(79, 62, 4, 0.035), transparent 70%);
+  }
+  .listing-card .card-header h3 { margin: 0; font-weight:800; font-size:1.2rem; letter-spacing: .2px; }
+  .listing-card .card-header small { display:block; margin-top:.25rem; color:var(--muted); font-weight:600; letter-spacing: .1px; }
+
+  .card-body { padding:1.25rem 1.5rem; }
+
+  /* Inputs — modern look */
+  .form-label { font-weight:700; color:#0f1724; font-size:.95rem; display:block; margin-bottom:.35rem; }
+  .form-control {
+    border-radius:12px;
+    border:1px solid #e6e9ee;
+    padding:.62rem .75rem;
+    background:linear-gradient(180deg,#fff,#fbfcfd);
+    box-shadow: 0 4px 14px rgba(16,24,40,0.03) inset;
+    transition: box-shadow .14s ease, border-color .14s ease, transform .08s ease;
+    font-size: .95rem;
+    color:#0b1220;
+  }
+  .form-control::placeholder { color:#9aa3b2; opacity:1; }
+  .form-control:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 10px 30px rgba(212,163,0,0.08);
+    transform: translateY(-1px);
+  }
+  textarea.form-control { min-height: 92px; resize: vertical; }
+
+  /* subtle helper text */
+  .form-text { color:var(--muted); font-size:.88rem; margin-top:.38rem; display:block; }
+  .field-note { color:var(--muted); font-size:.87rem; }
+
+  /* prettier file input (keeps same input but wraps visually) */
+  .file-wrap { display:flex; gap:12px; align-items:center; }
+  .file-thumb {
+    width:120px; height:84px; border-radius:10px; overflow:hidden;
+    background:linear-gradient(180deg,#f6f7f9,#fff);
+    border:1px solid rgba(15,23,42,0.03);
+    display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:.9rem;
+  }
+  .file-meta { flex:1; display:flex; flex-direction:column; gap:6px; }
+  .file-meta .file-name { font-weight:700; color:#0b1220; font-size:.92rem; }
+  .file-meta .file-sub { color:var(--muted); font-size:.86rem; }
+
+  /* inputs row */
+  .row .col-md-4, .row .col-md-8 { margin-bottom:.8rem; }
+
+  /* validation states (clean) */
+  .is-invalid { border-color: #ef4444 !important; box-shadow:none !important; }
+  .invalid-feedback { color:#b91c1c; font-size:.88rem; margin-top:.35rem; display:none; }
+  .was-validated .is-invalid + .invalid-feedback { display:block; }
+
+  /* primary button — premium */
+  .btn-primary {
+    background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+    color:#0b1220;
+    border:none;
+    padding:.62rem 1.1rem;
+    border-radius:12px;
+    font-weight:800;
+    box-shadow: 0 12px 30px rgba(179,139,0,0.12);
+    transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 18px 44px rgba(179,139,0,0.14); }
+  .btn-outline-secondary {
+    border-radius:10px; border:1px solid rgba(15,23,42,0.06); color:#374151; background:transparent; padding:.58rem .85rem;
+  }
+
+  /* small responsive tweaks */
+  @media (max-width:576px) {
+    .file-wrap { flex-direction:column; align-items:stretch; }
+    .file-thumb{ width:100%; height:160px; }
+    .btn-primary { width:100%; }
+  }
+
+  /* subtle microcopy at footer */
+  .form-footer-note { color:var(--muted); font-size:.85rem; margin-left:auto; }
+
+</style>
+
 <div class="row mt-4">
   <div class="col-lg-7 col-md-11 col-sm-10 mx-auto">
-    <div class="card shadow-lg border-0 rounded-4 overflow-hidden" 
-         style="background: linear-gradient(145deg, #ffffff, #f8f9fa); transition: transform 0.2s ease, box-shadow 0.2s ease;">
+    <div class="card listing-card shadow-sm border-0 rounded-4 overflow-hidden">
       
       <div class="card-header text-black text-center py-3">
         <h3 class="mb-0 fw-bold">📢 Create A New Listing</h3>
+        <small class="text-muted">Clear titles, good photos and accurate location increase bookings.</small>
       </div>
 
       <div class="card-body p-4"> 
-        <form method="POST" action="/listings" enctype="multipart/form-data" class="needs-validation" novalidate>
+        <!-- NOTE: form fields, names and action are unchanged — only UX & styling updated -->
+        <form method="POST" action="/listings" enctype="multipart/form-data" class="needs-validation" id="listingForm" novalidate>
           
           <!-- Title -->
           <div class="mb-3">
@@ -18,11 +127,13 @@
               type="text"
               name="listing[title]"
               id="title"
-              placeholder="Add a catchy title"
+              placeholder="e.g. Cozy 1BR near central park with balcony"
               class="form-control"
               required
               autocomplete="off"
+              aria-describedby="titleHelp"
             />
+            <div id="titleHelp" class="form-text">Short and descriptive — include neighborhood or standout amenity.</div>
             <div class="invalid-feedback">Title is required.</div>
           </div>
 
@@ -33,7 +144,7 @@
               name="listing[description]"
               id="description"
               class="form-control"
-              placeholder="Write a short description"
+              placeholder="Write a brief description (highlights, vibe, who it's good for)"
               rows="3"
               required
               autocomplete="off"
@@ -41,17 +152,28 @@
             <div class="invalid-feedback">Description is required.</div>
           </div>
 
-          <!-- Image -->
+          <!-- Image (improved look; same input name) -->
           <div class="mb-3">
             <label for="image" class="form-label">Upload Listing Image</label>
-            <input
-              type="file"
-              name="listing[image]"
-              id="image"
-              class="form-control"
-              required
-            />
-            <div class="invalid-feedback">Image is required.</div>
+            <div class="file-wrap">
+              <div class="file-thumb" id="fileThumb">Preview</div>
+              <div class="file-meta">
+                <span class="file-name" id="fileLabel">No file selected</span>
+                <span class="file-sub">Primary photo — JPG/PNG recommended. Keep file size ≤5MB for best UX.</span>
+                <input
+                  type="file"
+                  name="listing[image]"
+                  id="image"
+                  class="form-control"
+                  accept="image/*"
+                  required
+                  aria-describedby="imageHelp"
+                  style="margin-top:.4rem;"
+                />
+                <div id="imageHelp" class="form-text">This image will be shown first on your listing card.</div>
+                <div class="invalid-feedback">Image is required.</div>
+              </div>
+            </div>
           </div>
 
           <div class="row">
@@ -94,20 +216,99 @@
               type="text"
               name="listing[location]"
               id="location"
-              placeholder="Delhi, Mumbai..."
+              placeholder="e.g. Bandra West, Mumbai"
               class="form-control"
               required
               autocomplete="address-level2"
             />
+            <div class="form-text">We will geocode this location to place it on the map (exact address won't be public).</div>
             <div class="invalid-feedback">Location is required.</div>
           </div>
 
           <!-- Submit -->
-          <button type="submit" class="btn btn-primary">➕  Add Listing</button>
+          <div class="d-flex align-items-center gap-2">
+            <button type="submit" class="btn btn-primary" id="submitBtn">➕ Add Listing</button>
+            <a href="/listings" class="btn btn-outline-secondary">Cancel</a>
+            <div class="ms-auto form-footer-note">All required fields must be filled.</div>
+          </div>
         </form>
       </div>
     </div>
   </div>
 </div>
 
+<script>
+  (function () {
+    'use strict';
 
+    const form = document.getElementById('listingForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const imageInput = document.getElementById('image');
+    const fileThumb = document.getElementById('fileThumb');
+    const fileLabel = document.getElementById('fileLabel');
+
+    // preview small thumbnail and filename (UX only, uses same input)
+    imageInput.addEventListener('change', function () {
+      const f = this.files && this.files[0];
+      if (!f) {
+        fileThumb.textContent = 'Preview';
+        fileLabel.textContent = 'No file selected';
+        return;
+      }
+      // type check
+      if (!f.type.startsWith('image/')) {
+        fileThumb.textContent = 'Invalid file';
+        fileLabel.textContent = f.name;
+        this.classList.add('is-invalid');
+        return;
+      }
+      // size hint
+      if (f.size > 5 * 1024 * 1024) {
+        this.classList.add('is-invalid');
+        fileLabel.textContent = `${f.name} — Too large`;
+      } else {
+        this.classList.remove('is-invalid');
+        // preview
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.src = e.target.result;
+          img.style.width = '100%';
+          img.style.height = '100%';
+          img.style.objectFit = 'cover';
+          fileThumb.innerHTML = '';
+          fileThumb.appendChild(img);
+        };
+        reader.readAsDataURL(f);
+        fileLabel.textContent = `${f.name} · ${(Math.round(f.size/1024)).toLocaleString()} KB`;
+      }
+    });
+
+    // form submit: client-side validation + prevent double submit
+    form.addEventListener('submit', function (e) {
+      // reset validation class for file
+      imageInput.classList.remove('is-invalid');
+
+      const file = imageInput.files && imageInput.files[0];
+      let ok = true;
+      if (!file) {
+        imageInput.classList.add('is-invalid');
+        ok = false;
+      } else if (file.size > 5 * 1024 * 1024) {
+        imageInput.classList.add('is-invalid');
+        ok = false;
+      }
+
+      if (!form.checkValidity() || !ok) {
+        e.preventDefault();
+        e.stopPropagation();
+        form.classList.add('was-validated');
+        return;
+      }
+
+      // disable submit to prevent accidental double submission
+      submitBtn.disabled = true;
+      submitBtn.textContent = '⏳ Adding...';
+    }, false);
+  })();
+</script>
