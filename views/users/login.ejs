@@ -13,8 +13,36 @@
 
       <!-- Card Body -->
       <div class="card-body p-4">
-        <form action="/login" method="POST" class="needs-validation" novalidate>
-          
+
+        <!-- Server / flash errors (safe: only shown if provided) -->
+        <% if (typeof errorMsg !== 'undefined' && errorMsg) { %>
+          <div class="alert alert-danger small" role="alert" aria-live="assertive">
+            <%= errorMsg %>
+          </div>
+        <% } %>
+
+        <% if (typeof infoMsg !== 'undefined' && infoMsg) { %>
+          <div class="alert alert-info small" role="status" aria-live="polite">
+            <%= infoMsg %>
+          </div>
+        <% } %>
+
+        <form action="/login" method="POST" class="needs-validation" novalidate id="loginForm" aria-describedby="loginInstructions">
+          <!-- CSRF token (if using) -->
+          <% if (typeof csrfToken !== 'undefined') { %>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <% } %>
+
+          <!-- Honeypot (hidden, simple bot trap) -->
+          <div style="display:none !important;">
+            <label>Leave this field empty</label>
+            <input type="text" name="website" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div id="loginInstructions" class="visually-hidden">
+            Enter username and password to login. Use forgot password if you cannot access your account.
+          </div>
+
           <!-- Username -->
           <div class="mb-3">
             <label for="username" class="form-label fw-semibold">Username</label>
@@ -26,30 +54,61 @@
               placeholder="Enter your username"
               required 
               autocomplete="username"
+              aria-describedby="usernameHelp"
+              value="<%= (typeof formData !== 'undefined' && formData.username) ? formData.username : '' %>"
+              autofocus
             />
+            <div id="usernameHelp" class="form-text small text-muted">You can use your username or registered email.</div>
             <div class="invalid-feedback">Please enter a username.</div>
           </div>
 
           <!-- Password -->
-          <div class="mb-3">
+          <div class="mb-3 position-relative">
             <label for="password" class="form-label fw-semibold">Password</label>
-            <input 
-              name="password" 
-              id="password"
-              type="password" 
-              class="form-control" 
-              placeholder="Enter your password"
-              minlength="6"
-              required 
-              autocomplete="current-password"
-            />
+            <div class="input-group">
+              <input 
+                name="password" 
+                id="password"
+                type="password" 
+                class="form-control" 
+                placeholder="Enter your password"
+                minlength="6"
+                required 
+                autocomplete="current-password"
+                aria-describedby="passwordHelp"
+              />
+              <button class="btn btn-outline-secondary" type="button" id="togglePassword" aria-label="Toggle password visibility">
+                <i class="far fa-eye" aria-hidden="true"></i>
+              </button>
+            </div>
+            <div id="passwordHelp" class="form-text small text-muted mt-1">Minimum 6 characters.</div>
             <div class="invalid-feedback">Password must be at least 6 characters long.</div>
+          </div>
+
+          <!-- Remember + Forgot (NOW REQUIRED) -->
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <div class="form-check">
+              <input 
+                type="checkbox" 
+                class="form-check-input" 
+                id="remember" 
+                name="remember" 
+                required
+                <%= (typeof formData !== 'undefined' && formData.remember) ? 'checked' : '' %>>
+              <label class="form-check-label small text-muted" for="remember">Remember me</label>
+              <div class="invalid-feedback">You must check "Remember me" before login.</div>
+            </div>
+            <div>
+              <a href="/signup" class="small text-decoration-none">Forgot password?</a>
+            </div>
           </div>
 
           <!-- Submit Button -->
           <div class="d-grid">
-            <button class="btn btn-dark btn-lg mt-3" type="submit">
-              <i class="fas fa-sign-in-alt me-2"></i> Login
+            <button class="btn btn-dark btn-lg mt-3" type="submit" id="submitBtn" aria-live="polite" aria-busy="false">
+              <i class="fas fa-sign-in-alt me-2" aria-hidden="true"></i>
+              <span id="submitText">Login</span>
+              <span id="submitSpinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
             </button>
           </div>
 
@@ -64,3 +123,65 @@
     </div>
   </div>
 </div>
+
+<!-- Minimal inline script for realistic UX -->
+<script>
+  (function(){
+    'use strict';
+    const form = document.getElementById('loginForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const submitText = document.getElementById('submitText');
+    const submitSpinner = document.getElementById('submitSpinner');
+
+    const pwInput = document.getElementById('password');
+    const toggleBtn = document.getElementById('togglePassword');
+
+    // Toggle password visibility
+    toggleBtn.addEventListener('click', function(){
+      const type = pwInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      pwInput.setAttribute('type', type);
+      this.querySelector('i').classList.toggle('fa-eye-slash');
+    });
+
+    // Prevent double submit; bootstrap-like validation
+    form.addEventListener('submit', function(e){
+      // Honeypot check (silent fail)
+      const hp = form.querySelector('input[name="website"]');
+      if (hp && hp.value) {
+        e.preventDefault();
+        return;
+      }
+
+      if (!form.checkValidity()) {
+        e.preventDefault();
+        e.stopPropagation();
+        form.classList.add('was-validated');
+        return;
+      }
+
+      // Disable and show spinner
+      submitBtn.disabled = true;
+      submitBtn.setAttribute('aria-busy','true');
+      submitSpinner.classList.remove('d-none');
+      submitText.textContent = 'Signing in...';
+      // Let the form submit normally
+    }, false);
+
+    // Better Enter behaviour
+    const inputs = form.querySelectorAll('input');
+    inputs.forEach(i => {
+      i.addEventListener('keydown', function(ev){
+        if (ev.key === 'Enter') {
+          if (!form.checkValidity()) {
+            ev.preventDefault();
+            form.classList.add('was-validated');
+          }
+        }
+      });
+    });
+
+    // Focus username if empty
+    const usernameEl = document.getElementById('username');
+    if (usernameEl && !usernameEl.value) usernameEl.focus();
+  })();
+</script>
