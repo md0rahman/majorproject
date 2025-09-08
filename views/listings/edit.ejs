@@ -1,98 +1,207 @@
 <!-- views/listings/edit.ejs -->
 <style>
-  :root {
+  /* UPGRADED: ultra-realistic / premium polish for edit form
+     ONLY visual/UX changes — no server-side behavior or form names changed. */
+  :root{
     --gold: #d4a300;
     --gold-dark: #b38b00;
     --muted: #6b7280;
-    --radius: 16px;
-    --soft-shadow: 0 10px 30px rgba(16,24,40,0.08);
-    --xl-shadow: 0 18px 50px rgba(16,24,40,0.10);
+    --muted-2: #94a3b8;
+    --muted-3: #9aa3b2;
+    --surface: #ffffff;
+    --card-radius: 16px;
+    --soft-shadow: 0 10px 30px rgba(16,24,40,0.06);
+    --xl-shadow: 0 26px 80px rgba(16,24,40,0.10);
+    --focus-ring: rgba(212,163,0,0.14);
+    --glass-border: rgba(15,23,42,0.05);
+    --accent: rgba(212,163,0,0.06);
+    --input-height: 46px;
+    --ui-gap: 12px;
+    --radius-sm: 10px;
+    --radius-lg: 14px;
+    --ui-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   }
+
+  body { font-family: var(--ui-font); color:#071124; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
 
   .listing-card {
-    border-radius: var(--radius);
+    border-radius: var(--card-radius);
     overflow: hidden;
-    border: 1px solid rgba(15,23,42,0.04);
-    background: linear-gradient(180deg, #ffffff 0%, rgba(212,163,0,0.03) 20%, #fbfcfd 60%, #f6f7f5 100%);
+    border: 1px solid var(--glass-border);
+    background:
+      radial-gradient(circle at 10% 8%, rgba(255,255,255,0.92), rgba(255,255,255,0.6) 6%, transparent 22%),
+      linear-gradient(180deg, #fffdfb 0%, rgba(212,163,0,0.02) 14%, #fbfcfe 48%, #f7fbff 100%);
     box-shadow: var(--xl-shadow);
-    transition: transform .18s ease, box-shadow .18s ease;
+    transition: transform .16s cubic-bezier(.2,.9,.28,1), box-shadow .16s ease;
+    will-change: transform;
   }
-  .listing-card:hover { transform: translateY(-4px); box-shadow: 0 30px 70px rgba(16,24,40,0.12); }
+  .listing-card:hover { transform: translateY(-6px); box-shadow: 0 44px 110px rgba(16,24,40,0.14); }
 
   .listing-card .card-header {
-    padding: 1.1rem 1.5rem;
+    padding: 1.05rem 1.5rem;
     border-bottom: 1px solid rgba(15,23,42,0.03);
-    background: linear-gradient(90deg, rgba(79, 62, 4, 0.035), transparent 70%);
-    text-align: center;
+    background: linear-gradient(90deg, rgba(212,163,0,0.035), transparent 72%);
+    text-align:center;
   }
-  .listing-card .card-header h3 { margin: 0; font-weight:800; font-size:1.2rem; letter-spacing: .2px; }
-  .listing-card .card-header small { display:block; margin-top:.25rem; color:var(--muted); font-weight:600; letter-spacing: .1px; }
+  .listing-card .card-header h3 {
+    margin: 0; font-weight: 800; font-size: 1.16rem; letter-spacing: .2px; color: #081226;
+  }
+  .listing-card .card-header small {
+    display:block; margin-top:.26rem; color:var(--muted); font-weight:600; font-size:.92rem;
+  }
 
-  .card-body { padding:1.25rem 1.5rem; }
+  .card-body { padding:1.45rem 1.5rem; }
 
-  .form-label { font-weight:700; color:#0f1724; font-size:.95rem; display:block; margin-bottom:.35rem; }
+  /* Form labels & inputs */
+  .form-label { font-weight:700; color:#071124; font-size:.95rem; display:block; margin-bottom:.45rem; }
   .form-control {
+    height: var(--input-height);
     border-radius:12px;
     border:1px solid #e6e9ee;
-    padding:.62rem .75rem;
-    background:linear-gradient(180deg,#fff,#fbfcfd);
-    box-shadow: 0 4px 14px rgba(16,24,40,0.03) inset;
-    transition: box-shadow .14s ease, border-color .14s ease, transform .08s ease;
+    padding:.6rem .9rem;
+    background: linear-gradient(180deg,#ffffff,#fbfcfd);
+    box-shadow: inset 0 3px 8px rgba(16,24,40,0.03);
+    transition: box-shadow .12s ease, border-color .12s ease, transform .06s ease;
     font-size: .95rem;
-    color:#0b1220;
+    color:#071124;
+    -webkit-appearance: none;
+    -moz-appearance: none;
   }
-  .form-control::placeholder { color:#9aa3b2; opacity:1; }
+  .form-control::placeholder { color:var(--muted-2); opacity:1; }
   .form-control:focus {
-    outline: none;
-    border-color: var(--gold);
-    box-shadow: 0 10px 30px rgba(212,163,0,0.08);
-    transform: translateY(-1px);
+    outline: none; border-color: var(--gold); box-shadow: 0 12px 36px var(--focus-ring); transform: translateY(-1px);
   }
-  textarea.form-control { min-height: 92px; resize: vertical; }
+  textarea.form-control { min-height: 120px; resize: vertical; padding-top:.85rem; padding-bottom:.85rem; }
 
-  .form-text { color:var(--muted); font-size:.88rem; margin-top:.38rem; display:block; }
+  .form-text { color:var(--muted); font-size:.88rem; margin-top:.36rem; display:block; }
   .field-note { color:var(--muted); font-size:.87rem; }
 
-  .file-wrap { display:flex; gap:12px; align-items:center; }
+  /* File input wrapper — tactile and realistic */
+  .file-wrap { display:flex; gap:var(--ui-gap); align-items:center; }
   .file-thumb {
-    width:120px; height:84px; border-radius:10px; overflow:hidden;
-    background:linear-gradient(180deg,#f6f7f9,#fff);
+    width:148px; height:100px; border-radius:var(--radius-sm); overflow:hidden;
+    background:linear-gradient(180deg,#fbfdff 0%, #f3f6fb 60%);
     border:1px solid rgba(15,23,42,0.03);
-    display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:.9rem;
+    display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:.98rem;
+    box-shadow: 0 10px 26px rgba(16,24,40,0.05);
+    flex-shrink:0;
+    transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+    position:relative; cursor:default;
   }
-  .file-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
-  .file-meta { flex:1; display:flex; flex-direction:column; gap:6px; }
-  .file-meta .file-name { font-weight:700; color:#0b1220; font-size:.92rem; }
+
+  .file-thumb:hover { transform: translateY(-3px); box-shadow: 0 20px 44px rgba(16,24,40,0.07); border-color: rgba(255,56,92,0.06); }
+  .file-thumb img { width:100%; height:100%; object-fit:cover; display:block; animation: fadeIn .38s ease; }
+
+  @keyframes fadeIn { from { opacity:0; transform: scale(1.02); } to { opacity:1; transform: scale(1); } }
+
+  /* overlay on thumb (filename + actions) */
+  .thumb-overlay {
+    position:absolute; left:0; right:0; bottom:0;
+    padding:8px 10px; display:flex; justify-content:space-between; align-items:center;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.45) 100%);
+    backdrop-filter: blur(3px); color:#fff; font-size:12px;
+    z-index:5;
+  }
+  .thumb-filename { font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:62%; }
+  .thumb-actions { display:flex; gap:8px; }
+  .thumb-btn {
+    border:0; background: rgba(255,255,255,0.12); color:#fff; padding:5px 8px; border-radius:8px;
+    font-size:12px; display:flex; gap:6px; align-items:center; cursor:pointer;
+  }
+  .thumb-btn:hover { background: rgba(255,255,255,0.22); }
+
+  .file-meta { flex:1; display:flex; flex-direction:column; gap:6px; min-width:0; }
+  .file-meta .file-name { font-weight:700; color:#071124; font-size:.93rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .file-meta .file-sub { color:var(--muted); font-size:.86rem; }
 
-  .row .col-md-4, .row .col-md-8 { margin-bottom:.8rem; }
+  .row .col-md-4, .row .col-md-8 { margin-bottom:.85rem; }
 
+  /* validation visuals */
   .is-invalid { border-color: #ef4444 !important; box-shadow:none !important; }
   .invalid-feedback { color:#b91c1c; font-size:.88rem; margin-top:.35rem; display:none; }
   .was-validated .is-invalid + .invalid-feedback { display:block; }
 
+  /* refined buttons */
   .btn-primary {
     background: linear-gradient(90deg, var(--gold), var(--gold-dark));
-    color:#0b1220;
-    border:none;
-    padding:.62rem 1.1rem;
-    border-radius:12px;
-    font-weight:800;
-    box-shadow: 0 12px 30px rgba(179,139,0,0.12);
+    color:#071124; border:none; padding:.68rem 1.15rem; border-radius:12px; font-weight:800;
+    box-shadow: 0 16px 40px rgba(179,139,0,0.12);
     transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
   }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 18px 44px rgba(179,139,0,0.14); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 28px 68px rgba(179,139,0,0.14); }
   .btn-outline-secondary {
-    border-radius:10px; border:1px solid rgba(15,23,42,0.06); color:#374151; background:transparent; padding:.58rem .85rem;
+    border-radius:10px; border:1px solid rgba(15,23,42,0.06); color:#374151; background:transparent; padding:.62rem .9rem;
   }
 
-  @media (max-width:576px) {
-    .file-wrap { flex-direction:column; align-items:stretch; }
+  @media (max-width:576px){
+    .file-wrap { flex-direction:column; align-items:stretch; gap:10px; }
     .file-thumb{ width:100%; height:160px; }
-    .btn-primary { width:100%; }
+    .btn-primary{ width:100%; }
+    .card-body{ padding:1rem; }
   }
 
   .form-footer-note { color:var(--muted); font-size:.85rem; margin-left:auto; }
+
+  /* accessible focus */
+  .form-control:focus-visible, .btn-primary:focus-visible, .file-thumb:focus-visible {
+    outline: 3px solid rgba(212,163,0,0.08);
+    outline-offset: 3px;
+  }
+
+  /* small tweak for native file input */
+  input[type="file"].form-control { font-size:.9rem; padding:.42rem .68rem; height:auto; cursor:pointer; }
+
+  .thumb-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;       /* filename upar, buttons niche */
+  gap: 6px;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.65) 100%);
+  backdrop-filter: blur(3px);
+  color: #fff;
+  font-size: 12px;
+  z-index: 10;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.thumb-filename {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.thumb-actions {
+  display: flex;
+  flex-direction: row;          /* buttons ek line me */
+  justify-content: flex-end;    /* right align */
+  gap: 6px;
+}
+
+.thumb-btn {
+  border: 0;
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  padding: 4px 2px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  white-space: nowrap;
+}
+.thumb-btn i {
+  font-size: 10px;
+}
+.thumb-btn:hover {
+  background: rgba(255,255,255,0.35);
+}
+
 </style>
 
 <div class="row mt-4">
@@ -145,11 +254,11 @@
           <div class="mb-3">
             <label class="form-label">Original Listing Image</label>
             <div class="file-wrap mb-2">
-              <div class="file-thumb" id="fileThumbExisting">
+              <div class="file-thumb" id="fileThumbExisting" aria-hidden="true">
                 <% if (originalImageUrl) { %>
                   <img src="<%= originalImageUrl %>" alt="original">
                 <% } else { %>
-                  Preview
+                  <i class="fa-regular fa-image" style="font-size:28px;color:var(--muted-2);"></i>
                 <% } %>
               </div>
               <div class="file-meta">
@@ -160,7 +269,10 @@
 
             <label for="image" class="form-label">Upload New Image</label>
             <div class="file-wrap">
-              <div class="file-thumb" id="fileThumb">Preview</div>
+              <div class="file-thumb" id="fileThumb" role="img" aria-label="Preview area">
+                <i class="fa-regular fa-image" style="font-size:28px;color:var(--muted-2);"></i>
+              </div>
+
               <div class="file-meta">
                 <span class="file-name" id="fileLabel">No file selected</span>
                 <input
@@ -244,7 +356,6 @@
 <script>
   (function () {
     'use strict';
-
     const MAX_SIZE = 5 * 1024 * 1024; // 5MB
     const form = document.getElementById('editListingForm');
     const imageInput = document.getElementById('image');
@@ -252,45 +363,96 @@
     const fileLabel = document.getElementById('fileLabel');
     const submitBtn = document.getElementById('submitBtn');
 
+    function clearThumbToPlaceholder() {
+      fileThumb.innerHTML = '<i class="fa-regular fa-image" style="font-size:28px;color:var(--muted-2);"></i>';
+      fileLabel.textContent = 'No file selected';
+    }
+
+    function removeOverlay() {
+      const ov = fileThumb.querySelector('.thumb-overlay');
+      if (ov) ov.remove();
+    }
+
+    function addOverlay(filename) {
+      removeOverlay();
+      const overlay = document.createElement('div');
+      overlay.className = 'thumb-overlay';
+
+      const nameDiv = document.createElement('div');
+      nameDiv.className = 'thumb-filename';
+      nameDiv.textContent = filename;
+      nameDiv.title = filename;
+
+      const actions = document.createElement('div');
+      actions.className = 'thumb-actions';
+
+      const changeBtn = document.createElement('button');
+      changeBtn.type = 'button'; changeBtn.className = 'thumb-btn';
+      changeBtn.innerHTML = '<i class="fa-solid fa-pen"></i> Change';
+      changeBtn.addEventListener('click', function () { imageInput.click(); });
+
+      const removeBtn = document.createElement('button');
+      removeBtn.type = 'button'; removeBtn.className = 'thumb-btn';
+      removeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i> Remove';
+      removeBtn.addEventListener('click', function () {
+        imageInput.value = '';
+        clearThumbToPlaceholder();
+        removeOverlay();
+      });
+
+      actions.appendChild(changeBtn);
+      actions.appendChild(removeBtn);
+      overlay.appendChild(nameDiv);
+      overlay.appendChild(actions);
+      fileThumb.appendChild(overlay);
+    }
+
     // preview for newly selected file
     imageInput.addEventListener('change', function () {
       const f = this.files && this.files[0];
       if (!f) {
-        fileThumb.textContent = 'Preview';
-        fileLabel.textContent = 'No file selected';
+        clearThumbToPlaceholder();
+        removeOverlay();
         return;
       }
+
+      // basic validation
       if (!f.type.startsWith('image/')) {
-        fileThumb.textContent = 'Invalid file';
-        fileLabel.textContent = f.name;
         this.classList.add('is-invalid');
+        fileThumb.innerHTML = 'Invalid file';
+        fileLabel.textContent = f.name;
+        removeOverlay();
         return;
       }
       if (f.size > MAX_SIZE) {
         this.classList.add('is-invalid');
         fileLabel.textContent = `${f.name} — Too large`;
-        fileThumb.textContent = 'Too large';
+        fileThumb.innerHTML = 'Too large';
+        removeOverlay();
         return;
       }
 
       this.classList.remove('is-invalid');
-      fileLabel.textContent = `${f.name} · ${(Math.round(f.size/1024)).toLocaleString()} KB`;
+      fileLabel.textContent = `${f.name} · ${(Math.round(f.size / 1024)).toLocaleString()} KB`;
+
       const reader = new FileReader();
       reader.onload = function (e) {
+        // create image preview
+        fileThumb.innerHTML = '';
         const img = new Image();
         img.src = e.target.result;
+        img.alt = f.name;
         img.style.width = '100%';
         img.style.height = '100%';
         img.style.objectFit = 'cover';
-        fileThumb.innerHTML = '';
         fileThumb.appendChild(img);
+        addOverlay(f.name);
       };
       reader.readAsDataURL(f);
     });
 
-    // simple validation + prevent double submit
+    // submit validation + prevent double submit
     form.addEventListener('submit', function (e) {
-      // reset validation for image
       imageInput.classList.remove('is-invalid');
 
       const file = imageInput.files && imageInput.files[0];
@@ -307,8 +469,17 @@
         return;
       }
 
+      // prevent double submit
       submitBtn.disabled = true;
       submitBtn.textContent = '⏳ Saving...';
     }, false);
+
+    // Initialize placeholders if no selection
+    (function init() {
+      if (!imageInput.value) {
+        // keep the existing preview (original) untouched; only set placeholder for the "new" thumb area
+        clearThumbToPlaceholder();
+      }
+    })();
   })();
 </script>
